@@ -1,4 +1,4 @@
-reportAngular
+ReortAngular
 =============
 This tool can be used to create a report of all module dependencies a module has in angularJS. Similarly it can list down all controllers, directives and services that would be listed under that module. 
 
