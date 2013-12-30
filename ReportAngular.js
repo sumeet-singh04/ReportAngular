@@ -63,6 +63,7 @@ function getDependencies(moduleName)
 
 function writeResults(moduleDependencies,moduleCtrl,moduleDrctv,moduleSrvc)
 {
+//Writing Module Dependencies Table
 	var moduleTable = document.createElement('table');
 	if(moduleDependencies.length>0) moduleTable.setAttribute('border', '2');
 	else  moduleTable.setAttribute('style', 'display:none');
@@ -88,25 +89,29 @@ function writeResults(moduleDependencies,moduleCtrl,moduleDrctv,moduleSrvc)
 	
 	document.getElementsByTagName('body')[0].appendChild(moduleTable);
 
-}
-
-/*var moduleArray  = v_module._invokeQueue;
-	var ctrlObjList  = new Array();
-	for(var i=0;i<moduleArray.length;i++)
+	
+	//Writing all controllers table
+	var ctrlTable = document.createElement('table);
+	if(moduleCtrl.length <=0) moduleCtrl.setAttribute('style','display:none');
+	
+	//Creating column Header
+	txtNode = document.createTextNode('Controllers');
+	trEle = document.createElement('tr');
+	thEle = document.createElement('th');
+	thEle.appendChild(txtNode);
+	trEle.appendChild(thEle);
+	moduleTable.appendChild(trEle);
+	
+	//creating rows
+	for(var i=0;i<moduleCtrl.length;i++)
 	{
-		ctrl = new Object();
-		ctrl.name = moduleArray[i][2][0];
-		ctrl.functionArray = moduleArray[i][2][1];
-		ctrl.dependency = new Array();
-		var functionString = ctrl.functionArray[ctrl.functionArray.length-1].toString();
-		functionString = functionString.substring(0,functionString.indexOf('{'))
-		ctrl.dependencyMapping = functionString.substring(functionString.indexOf('(')+1,functionString.lastIndexOf(')'));
-		for(var j=0;j<ctrl.functionArray.length-1;j++)
-		{
-
-			ctrl.dependency.push(ctrl.functionArray[j]);
-		}
-		ctrlObjList.push(ctrl);
+		trEle = document.createElement('tr');
+		tdEle = document.createElement('td');
+		txtNode = document.createTextNode(moduleCtrl[i][2][0]);
+		tdEle.appendChild(txtNode);
+		trEle.appendChild(tdEle);
+		ctrlTable.appendChild(trEle);
 	}
-	ctrlDiv.innerHTML = ctrlObjList[0].name + "  |||  " + ctrlObjList[0].dependency + " ||| " + ctrlObjList[0].dependencyMapping;
-}*/
+	
+	document.getElementsByTagName('body')[0].appendChild(ctrlTable);
+}
