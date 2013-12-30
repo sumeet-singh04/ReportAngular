@@ -91,7 +91,7 @@ function writeResults(moduleDependencies,moduleCtrl,moduleDrctv,moduleSrvc)
 
 	
 	//Writing all controllers table
-	var ctrlTable = document.createElement('table);
+	var ctrlTable = document.createElement('table');
 	if(moduleCtrl.length <=0) moduleCtrl.setAttribute('style','display:none');
 	
 	//Creating column Header
