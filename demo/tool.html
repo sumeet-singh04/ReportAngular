@@ -8,12 +8,13 @@
 </head>
 <body>
 	URL name
-	<input id="urlName" type="text" /> Module name
-	<input id="report.moduleName" type="text" />
-	<button onclick="getIndexPage()">Go</button>
+	<input id="urlName" type="text" onblur="checkVal()"/> Module name
+	<input id="report.moduleName" type="text" onblur="checkVal()"/>
+	<button id='go' onclick="getIndexPage()" disabled="disabled">Go</button>
 	<div id="check"></div>
 
 
 <div id="report"></div>
+<div id="create"></div>
 </body>
 </html>

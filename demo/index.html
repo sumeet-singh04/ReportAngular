@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html ng-app='Web-Learning'>
+<head>
+
+<title>Welcome to Web Learning</title>
+<script type="text/javascript" src="jsResources/angular.js"></script>
+
+<script type="text/javascript" src="Config/app.js"></script>
+<script type="text/javascript" src="Config/SRVC_check.js"></script>
+<script type="text/javascript" src="Controllers/CTLR_index.js"></script>
+<script type="text/javascript" src="Controllers/CTLR_nav.js"></script>
+<script type="text/javascript" src="Directives/DRCTV_Tags.js"></script>
+</head>
+<body>
+    <div ng-controller='indexCTLR'>
+    	<div style="margin: 0 0 0 0 px" ng-include="'Partials/PRTL_navigation.html'"></div>
+    	<div ng-include="indexUrl"></div>
+    	<hr>
+    	<div tags check='work'></div>
+    </div>
+	<div ng-include="'Partials/PRTL_footer.html'"></div>
+	
+	<input type='text' ng-keydown='{count = 1}'/> Count i s: {{count}}
+</body>
+</html>
