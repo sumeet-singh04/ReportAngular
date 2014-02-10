@@ -1,6 +1,7 @@
 var xmlObj = new XMLHttpRequest();
 var indexData, moduleName;
 var reportCount = 0;
+var moduleMap = {};
 
 function checkVal()
 {
@@ -49,7 +50,8 @@ function getDependencies(moduleName, divEle) {
 	var moduleCtrl = [];
 	var moduleDrctv = [];
 	var moduleSrvc = [];
-
+	var moduleCnst = [];
+	var moduleVo = [];
 	this.moduleName = moduleName;
 	var v_module = angular.module(moduleName);
 
@@ -69,15 +71,29 @@ function getDependencies(moduleName, divEle) {
 			moduleDrctv.push(providerArray[i]);
 		else if (providerArray[i][1] == 'service')
 			moduleSrvc.push(providerArray[i]);
+		else if (providerArray[i][1] == 'value')
+			moduleVo.push(providerArray[i]);
+		else if(providerArray[i][1] == 'constant')
+			moduleVo.push(providerArray[i]);
 	}
+	
+	moduleMap[moduleName] = {
+			'moduleCtrl':moduleCtrl,
+			'moduleDrctv': moduleDrctv,
+			'moduleSrvc':moduleSrvc,
+			'moduleCnst':moduleCnst,
+			'moduleVo':moduleVo,
+			
+	};
+	
 
-	writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,
-			divEle);
+	writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,moduleVo,moduleCnst,
+			divEle,moduleName);
 
 }
 
-function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,
-		divName) {
+function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,moduleVo,moduleCnst,
+		divName,moduleName) {
 	// Writing Module Dependencies Table
 
 	var moduleTable = document.createElement('table');
@@ -124,7 +140,7 @@ function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,
 	for (var i = 0; i < moduleCtrl.length; i++) {
 		trEle = document.createElement('tr');
 		tdEle = document.createElement('td');
-
+		tdEle.setAttribute('onclick', 'displayCtrlDetails('+moduleName+','+moduleCtrl[i][2][0]+')');
 		txtNode = document.createTextNode(moduleCtrl[i][2][0]);
 		tdEle.appendChild(txtNode);
 		trEle.appendChild(tdEle);
@@ -168,13 +184,59 @@ function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,
 	srvcTable.appendChild(trEle);
 
 	// creating rows
-	for (var i = 0; i < moduleDrctv.length; i++) {
+	for (var i = 0; i < moduleSrvc.length; i++) {
 		trEle = document.createElement('tr');
 		tdEle = document.createElement('td');
 		txtNode = document.createTextNode(moduleSrvc[i][2][0]);
 		tdEle.appendChild(txtNode);
 		trEle.appendChild(tdEle);
 		srvcTable.appendChild(trEle);
+	}
+	
+	// Writing all VO's table
+	var voTable = document.createElement('table');
+	if (moduleVo.length <= 0)
+		voTable.setAttribute('style', 'display:none');
+
+	// Creating column Header
+	txtNode = document.createTextNode('Value Objects');
+	trEle = document.createElement('tr');
+	thEle = document.createElement('th');
+	thEle.appendChild(txtNode);
+	trEle.appendChild(thEle);
+	voTable.appendChild(trEle);
+
+	// creating rows
+	for (var i = 0; i < moduleVo.length; i++) {
+		trEle = document.createElement('tr');
+		tdEle = document.createElement('td');
+		txtNode = document.createTextNode(moduleVo[i][2][0]);
+		tdEle.appendChild(txtNode);
+		trEle.appendChild(tdEle);
+		voTable.appendChild(trEle);
+	}
+	
+	// Writing all constant table
+	var cnstTable = document.createElement('table');
+	if (moduleCnst.length <= 0)
+		cnstTable.setAttribute('style', 'display:none');
+
+	// Creating column Header
+	txtNode = document.createTextNode('Value Objects');
+	trEle = document.createElement('tr');
+	thEle = document.createElement('th');
+	thEle.appendChild(txtNode);
+	trEle.appendChild(thEle);
+	cnstTable.appendChild(trEle);
+
+	// creating rows
+	for (var i = 0; i < moduleCnst.length; i++) {
+		trEle = document.createElement('tr');
+		tdEle = document.createElement('td');
+		txtNode = document.createTextNode(moduleCnst[i][2][0]);
+		tdEle.appendChild(txtNode);
+		trEle.appendChild(tdEle);
+		cnstTable.appendChild(trEle);
 	}
 
 	document.getElementById(divName).innerHTML = '';
@@ -185,9 +247,18 @@ function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,
 	document.getElementById(divName).appendChild(ctrlTable);
 	document.getElementById(divName).appendChild(drctvTable);
 	document.getElementById(divName).appendChild(srvcTable);
+	document.getElementById(divName).appendChild(voTable);
+	document.getElementById(divName).appendChild(cnstTable);
 
 }
 
 function getModule(moduleName) {
 	getDependencies(moduleName, 'create');
+}
+
+function displayCtrlDetails(moduleName)
+{
+	var detailEle = docuemnt.getElementById("popUp");
+	moduleMap[moduleName].moduleCtrl;
+	location.hash = '#popUpDetails';
 }
