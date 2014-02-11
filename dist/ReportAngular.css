@@ -149,3 +149,13 @@ button
 	text-align:left;
 	color: #234586;
 }
+
+#popUpContent
+{
+	min-width:400px;
+	min-height:400px;
+	max-width:800px;
+	max-heigth:400px;
+	overflow:auto;
+	display:inline-block;
+}

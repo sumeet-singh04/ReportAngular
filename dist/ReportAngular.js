@@ -40,7 +40,7 @@ function loadScriptTags(divEle) {
 		eval(xmlObj.responseText);
 	}
 
-	// alert(JSON.stringify(WebLearning));
+
 	getDependencies(document.getElementById("report.moduleName").value, divEle);
 }
 
@@ -74,7 +74,7 @@ function getDependencies(moduleName, divEle) {
 		else if (providerArray[i][1] == 'value')
 			moduleVo.push(providerArray[i]);
 		else if(providerArray[i][1] == 'constant')
-			moduleVo.push(providerArray[i]);
+			moduleCnst.push(providerArray[i]);
 	}
 	
 	moduleMap[moduleName] = {
@@ -140,7 +140,7 @@ function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,mo
 	for (var i = 0; i < moduleCtrl.length; i++) {
 		trEle = document.createElement('tr');
 		tdEle = document.createElement('td');
-		tdEle.setAttribute('onclick', 'displayCtrlDetails('+moduleName+','+moduleCtrl[i][2][0]+')');
+		tdEle.setAttribute('onclick', 'displayCtrlDetails("'+moduleName+'","'+moduleCtrl[i][2][0]+'")');
 		txtNode = document.createTextNode(moduleCtrl[i][2][0]);
 		tdEle.appendChild(txtNode);
 		trEle.appendChild(tdEle);
@@ -164,6 +164,7 @@ function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,mo
 	for (var i = 0; i < moduleDrctv.length; i++) {
 		trEle = document.createElement('tr');
 		tdEle = document.createElement('td');
+		tdEle.setAttribute('onclick', 'displayDrctvDetails("'+moduleName+'","'+moduleDrctv[i][2][0]+'")');
 		txtNode = document.createTextNode(moduleDrctv[i][2][0]);
 		tdEle.appendChild(txtNode);
 		trEle.appendChild(tdEle);
@@ -187,6 +188,7 @@ function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,mo
 	for (var i = 0; i < moduleSrvc.length; i++) {
 		trEle = document.createElement('tr');
 		tdEle = document.createElement('td');
+		tdEle.setAttribute('onclick', 'displaySrvcDetails("'+moduleName+'","'+moduleSrvc[i][2][0]+'")');
 		txtNode = document.createTextNode(moduleSrvc[i][2][0]);
 		tdEle.appendChild(txtNode);
 		trEle.appendChild(tdEle);
@@ -210,6 +212,7 @@ function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,mo
 	for (var i = 0; i < moduleVo.length; i++) {
 		trEle = document.createElement('tr');
 		tdEle = document.createElement('td');
+		tdEle.setAttribute('onclick', 'displayVoDetails("'+moduleName+'","'+moduleVo[i][2][0]+'")');
 		txtNode = document.createTextNode(moduleVo[i][2][0]);
 		tdEle.appendChild(txtNode);
 		trEle.appendChild(tdEle);
@@ -222,7 +225,7 @@ function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,mo
 		cnstTable.setAttribute('style', 'display:none');
 
 	// Creating column Header
-	txtNode = document.createTextNode('Value Objects');
+	txtNode = document.createTextNode('Constants');
 	trEle = document.createElement('tr');
 	thEle = document.createElement('th');
 	thEle.appendChild(txtNode);
@@ -233,6 +236,7 @@ function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,mo
 	for (var i = 0; i < moduleCnst.length; i++) {
 		trEle = document.createElement('tr');
 		tdEle = document.createElement('td');
+		tdEle.setAttribute('onclick', 'displayCnstDetails("'+moduleName+'","'+moduleCnst[i][2][0]+'")');
 		txtNode = document.createTextNode(moduleCnst[i][2][0]);
 		tdEle.appendChild(txtNode);
 		trEle.appendChild(tdEle);
@@ -256,9 +260,128 @@ function getModule(moduleName) {
 	getDependencies(moduleName, 'create');
 }
 
-function displayCtrlDetails(moduleName)
+function displayCtrlDetails(moduleName,moduleCtrl)
 {
-	var detailEle = docuemnt.getElementById("popUp");
-	moduleMap[moduleName].moduleCtrl;
+	var detailEle = document.getElementById("popUpContent");
+	var CtrlObj = [];
+	var CtrlObjs = moduleMap[moduleName].moduleCtrl;
+	for(var i=0;i<CtrlObjs.length;i++)
+		{
+			if(CtrlObjs[i][2][0] == moduleCtrl)
+				{
+					CtrlObj  = CtrlObjs[i];
+				}
+		}
+	detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleCtrl+"</h3>";
+	if(typeof CtrlObj[2][1] == 'function')
+		{
+		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+CtrlObj[2][1].toString()+"</div>";
+		}
+	else
+	{
+		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:left;width: 30%;overflow: auto;display: inline-block'>"+ CtrlObj[2][1].slice(0,CtrlObj[2][1].length-2).join(';')+"</div>";
+		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+CtrlObj[2][1][CtrlObj[2][1].length-1].toString()+"</div>";
+	}
+	
 	location.hash = '#popUpDetails';
+}
+
+function displayDrctvDetails(moduleName,moduleDrctv)
+{
+	var detailEle = document.getElementById("popUpContent");
+	var DrctvObj = [];
+	var DrctvObjs = moduleMap[moduleName].moduleDrctv;
+	for(var i=0;i<DrctvObjs.length;i++)
+	{
+		if(DrctvObjs[i][2][0] == moduleDrctv)
+			{
+				DrctvObj  = DrctvObjs[i];
+			}
+	}
+	detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleDrctv+"</h3>";
+	if(typeof DrctvObj[2][1] == 'function')
+	{
+		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+DrctvObj[2][1].toString()+"</div>";
+	}
+	else
+	{
+		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:left;width: 30%;overflow: auto;display: inline-block'>"+ DrctvObj[2][1].slice(0,DrctvObj[2][1].length-2).join(';')+"</div>";
+		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+DrctvObj[2][1][DrctvObj[2][1].length-1].toString()+"</div>";
+	}
+	
+	location.hash = '#popUpDetails';
+}
+
+function displaySrvcDetails(moduleName,moduleSrvc)
+{
+	var detailEle = document.getElementById("popUpContent");
+	var SrvcObj = [];
+	var SrvcObjs = moduleMap[moduleName].moduleSrvc;
+	for(var i=0;i<SrvcObjs.length;i++)
+	{
+		if(SrvcObjs[i][2][0] == moduleSrvc)
+			{
+				SrvcObj  = SrvcObjs[i];
+			}
+	}
+detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleSrvc+"</h3>";
+if(typeof SrvcObj[2][1] == 'function')
+	{
+	detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+SrvcObj[2][1].toString()+"</div>";
+	}
+else
+{
+	detailEle.innerHTML = detailEle.innerHTML + "<div style='float:left;width: 30%;overflow: auto;display: inline-block'>"+ SrvcObj[2][1].slice(0,CtrlObj[2][1].length-2).join(';')+"</div>";
+	detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+SrvcObj[2][1][SrvcObj[2][1].length-1].toString()+"</div>";
+}
+
+location.hash = '#popUpDetails';
+}
+
+function displayVoDetails(moduleName,moduleVo)
+{
+	var detailEle = document.getElementById("popUpContent");
+	var VoObj = [];
+	var VoObjs = moduleMap[moduleName].moduleVo;
+	for(var i=0;i<VoObjs.length;i++)
+	{
+		if(VoObjs[i][2][0] == moduleVo)
+			{
+			VoObj  = VoObjs[i];
+			}
+	}
+detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleVo+"</h3>";
+detailEle.innerHTML = detailEle.innerHTML + "<h3 style='text-align:center;'>KEY    :   Value</h3>";
+for(var key in VoObj[2][1])
+	{
+	if(VoObj[2][1].hasOwnProperty(key))
+		{
+			detailEle.innerHTML = detailEle.innerHTML + "<div style='text-align:center;'>"+key   +":"+   VoObj[2][1][key]+"</div>";
+		}
+	}
+
+location.hash = '#popUpDetails';
+}
+
+function displayCnstDetails(moduleName,moduleCnst)
+{
+	var detailEle = document.getElementById("popUpContent");
+	var CnstObj = [];
+	var CnstObjs = moduleMap[moduleName].moduleCnst;
+	for(var i=0;i<CnstObjs.length;i++)
+	{
+		if(CnstObjs[i][2][0] == moduleCnst)
+			{
+			CnstObj  = CnstObjs[i];
+			}
+	}
+detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleCnst+"</h3>";
+detailEle.innerHTML = detailEle.innerHTML + "<h3 style='text-align:center;'>Constant Values</h3>";
+for(var j=0;j<CnstObj[2][1].length;j++)
+	{
+		detailEle.innerHTML = detailEle.innerHTML + "<div style='text-align:center;'>"+CnstObj[2][1][j]+"</div>"
+	}
+
+
+location.hash = '#popUpDetails';
 }

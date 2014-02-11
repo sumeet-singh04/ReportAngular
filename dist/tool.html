@@ -4,21 +4,25 @@
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="ReportAngular.css">
+
+<script src='jszip.js'></script>
+<script src='xlsx.js'></script>
 <script type="text/javascript" src ="ReportAngular.js"></script>
+<script src='ExcelWriter.js'></script>
 </head>
 <body>
 	URL name
 	<input id="urlName" type="text" onblur="checkVal()"/> Module name
 	<input id="report.moduleName" type="text" onblur="checkVal()"/>
-	<button id='go' onclick="getIndexPage()" disabled="disabled">Go</button>
+	<button id='go' onclick="clickCheck()" >Go</button>
 	<div id="check"></div>
 
 
 <div id="report"></div>
 <div id="create"></div>
 <a class='overlay' id='popUpDetails'></a>
-<div id="popUp" class='popup'>
-Checking
+<div  class='popup'>
+<div id='popUpContent'></div>
 <a class="close" href="#close"></a>
 </div>
 </body>
