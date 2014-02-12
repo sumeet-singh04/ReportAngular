@@ -159,3 +159,27 @@ button
 	overflow:auto;
 	display:inline-block;
 }
+
+#popUpContent #popUpHeading
+{
+	text-align: center;
+}
+
+#popUpContent #injectables
+{
+	float:left;
+	width: 30%;
+	white-space:normal;
+	display: inline-block;
+}
+
+#popUpContent #fnctnString
+{
+	float:right;
+	width: 70%;
+	overflow: auto;
+	display: inline-block;
+	font-style: italic;
+	font-weight: bold;
+}
+

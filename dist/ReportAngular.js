@@ -55,13 +55,13 @@ function getDependencies(moduleName, divEle) {
 	this.moduleName = moduleName;
 	var v_module = angular.module(moduleName);
 
-	if (v_module.requires.length > 0) {
+	
 		for (var i = 0; i < v_module.requires.length; i++) {
 			var moduleObj = new Object();
 			moduleObj = angular.module(v_module.requires[i]);
 			moduleDependencies.push(moduleObj);
 		}
-	}
+	
 
 	var providerArray = v_module._invokeQueue;
 	for (var i = 0; i < providerArray.length; i++) {
@@ -262,7 +262,13 @@ function getModule(moduleName) {
 
 function displayCtrlDetails(moduleName,moduleCtrl)
 {
-	var detailEle = document.getElementById("popUpContent");
+	// var detailEle = document.getElementById("popUpContent");
+	var detailHeading = document.getElementById("popUpHeading");
+	var detailInjectables = document.getElementById("injectables");
+	var detailFnctnString = document.getElementById("fnctnString");
+	detailHeading.innerHTML = '';
+	detailInjectables.innerHTML = '';
+	detailFnctnString.innerHTML = '';
 	var CtrlObj = [];
 	var CtrlObjs = moduleMap[moduleName].moduleCtrl;
 	for(var i=0;i<CtrlObjs.length;i++)
@@ -272,15 +278,26 @@ function displayCtrlDetails(moduleName,moduleCtrl)
 					CtrlObj  = CtrlObjs[i];
 				}
 		}
-	detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleCtrl+"</h3>";
+	// detailEle.innerHTML = "<h3
+	// style='text-align:center;'>"+moduleCtrl+"</h3>";
+	detailHeading.textContent = moduleCtrl;
 	if(typeof CtrlObj[2][1] == 'function')
 		{
-		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+CtrlObj[2][1].toString()+"</div>";
+		detailFnctnString.innerHTML = CtrlObj[2][1].toString().split(';').join(';<br>');
+		// detailEle.innerHTML = detailEle.innerHTML + "<div
+		// style='float:right;width: 70%;overflow: auto;display:
+		// inline-block'>"+CtrlObj[2][1].toString()+"</div>";
 		}
 	else
 	{
-		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:left;width: 30%;overflow: auto;display: inline-block'>"+ CtrlObj[2][1].slice(0,CtrlObj[2][1].length-2).join(';')+"</div>";
-		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+CtrlObj[2][1][CtrlObj[2][1].length-1].toString()+"</div>";
+		detailInjectables.innerHTML =  CtrlObj[2][1].slice(0,CtrlObj[2][1].length-2).join('<br>');
+		// detailEle.innerHTML = detailEle.innerHTML + "<div
+		// style='float:left;width: 30%;overflow: auto;display: inline-block'>"+
+		// CtrlObj[2][1].slice(0,CtrlObj[2][1].length-2).join(';')+"</div>";
+		detailFnctnString.innerHTML = CtrlObj[2][1][CtrlObj[2][1].length-1].toString().split(';').join(';<br>');
+		// detailEle.innerHTML = detailEle.innerHTML + "<div
+		// style='float:right;width: 70%;overflow: auto;display:
+		// inline-block'>"+CtrlObj[2][1][CtrlObj[2][1].length-1].toString()+"</div>";
 	}
 	
 	location.hash = '#popUpDetails';
@@ -288,7 +305,12 @@ function displayCtrlDetails(moduleName,moduleCtrl)
 
 function displayDrctvDetails(moduleName,moduleDrctv)
 {
-	var detailEle = document.getElementById("popUpContent");
+	var detailHeading = document.getElementById("popUpHeading");
+	var detailInjectables = document.getElementById("injectables");
+	var detailFnctnString = document.getElementById("fnctnString");
+	detailHeading.innerHTML = '';
+	detailInjectables.innerHTML = '';
+	detailFnctnString.innerHTML = '';
 	var DrctvObj = [];
 	var DrctvObjs = moduleMap[moduleName].moduleDrctv;
 	for(var i=0;i<DrctvObjs.length;i++)
@@ -298,15 +320,26 @@ function displayDrctvDetails(moduleName,moduleDrctv)
 				DrctvObj  = DrctvObjs[i];
 			}
 	}
-	detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleDrctv+"</h3>";
+	// detailEle.innerHTML = "<h3
+	// style='text-align:center;'>"+moduleDrctv+"</h3>";
+	detailHeading.textContent = moduleDrctv;
 	if(typeof DrctvObj[2][1] == 'function')
 	{
-		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+DrctvObj[2][1].toString()+"</div>";
+		// detailEle.innerHTML = detailEle.innerHTML + "<div
+		// style='float:right;width: 70%;overflow: auto;display:
+		// inline-block'>"+DrctvObj[2][1].toString()+"</div>";
+		detailFnctnString.innerHTML = DrctvObj[2][1].toString().split(';').join(';<br>');  
 	}
 	else
 	{
-		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:left;width: 30%;overflow: auto;display: inline-block'>"+ DrctvObj[2][1].slice(0,DrctvObj[2][1].length-2).join(';')+"</div>";
-		detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+DrctvObj[2][1][DrctvObj[2][1].length-1].toString()+"</div>";
+		detailInjectables.innerHTML =  DrctvObj[2][1].slice(0,DrctvObj[2][1].length-2).join('<br>');
+		// detailEle.innerHTML = detailEle.innerHTML + "<div
+		// style='float:left;width: 30%;overflow: auto;display: inline-block'>"+
+		// DrctvObj[2][1].slice(0,DrctvObj[2][1].length-2).join(';')+"</div>";
+		detailFnctnString.innerHTML = DrctvObj[2][1][DrctvObj[2][1].length-1].toString().split(';').join(';<br>');  
+		// detailEle.innerHTML = detailEle.innerHTML + "<div
+		// style='float:right;width: 70%;overflow: auto;display:
+		// inline-block'>"+DrctvObj[2][1][DrctvObj[2][1].length-1].toString()+"</div>";
 	}
 	
 	location.hash = '#popUpDetails';
@@ -314,7 +347,13 @@ function displayDrctvDetails(moduleName,moduleDrctv)
 
 function displaySrvcDetails(moduleName,moduleSrvc)
 {
-	var detailEle = document.getElementById("popUpContent");
+	// var detailEle = document.getElementById("popUpContent");
+	var detailHeading = document.getElementById("popUpHeading");
+	var detailInjectables = document.getElementById("injectables");
+	var detailFnctnString = document.getElementById("fnctnString");
+	detailHeading.innerHTML = '';
+	detailInjectables.innerHTML = '';
+	detailFnctnString.innerHTML = '';
 	var SrvcObj = [];
 	var SrvcObjs = moduleMap[moduleName].moduleSrvc;
 	for(var i=0;i<SrvcObjs.length;i++)
@@ -324,15 +363,27 @@ function displaySrvcDetails(moduleName,moduleSrvc)
 				SrvcObj  = SrvcObjs[i];
 			}
 	}
-detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleSrvc+"</h3>";
+// detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleSrvc+"</h3>";
+	detailHeading.textContent = moduleSrvc;
 if(typeof SrvcObj[2][1] == 'function')
 	{
-	detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+SrvcObj[2][1].toString()+"</div>";
+	detailFnctnString.innerHTML = SrvcObj[2][1].toString().split(';').join(';<br>'); 
+	// detailEle.innerHTML = detailEle.innerHTML + "<div
+	// style='float:right;width: 70%;overflow: auto;display:
+	// inline-block'>"+SrvcObj[2][1].toString()+"</div>";
+	
 	}
 else
 {
-	detailEle.innerHTML = detailEle.innerHTML + "<div style='float:left;width: 30%;overflow: auto;display: inline-block'>"+ SrvcObj[2][1].slice(0,CtrlObj[2][1].length-2).join(';')+"</div>";
-	detailEle.innerHTML = detailEle.innerHTML + "<div style='float:right;width: 70%;overflow: auto;display: inline-block'>"+SrvcObj[2][1][SrvcObj[2][1].length-1].toString()+"</div>";
+	detailInjectables.innerHTML =  SrvcObj[2][1].slice(0,SrvcObj[2][1].length-2).join('<br>');
+	// detailEle.innerHTML = detailEle.innerHTML + "<div
+	// style='float:left;width: 30%;overflow: auto;display: inline-block'>"+
+	// SrvcObj[2][1].slice(0,CtrlObj[2][1].length-2).join(';')+"</div>";
+	detailFnctnString.innerHTML = SrvcObj[2][1][SrvcObj[2][1].length-1].toString().split(';').join(';<br>'); 
+	// detailEle.innerHTML = detailEle.innerHTML + "<div
+	// style='float:right;width: 70%;overflow: auto;display:
+	// inline-block'>"+SrvcObj[2][1][SrvcObj[2][1].length-1].toString()+"</div>";
+	
 }
 
 location.hash = '#popUpDetails';
@@ -340,7 +391,13 @@ location.hash = '#popUpDetails';
 
 function displayVoDetails(moduleName,moduleVo)
 {
-	var detailEle = document.getElementById("popUpContent");
+	// var detailEle = document.getElementById("popUpContent");
+	var detailHeading = document.getElementById("popUpHeading");
+	var detailInjectables = document.getElementById("injectables");
+	var detailFnctnString = document.getElementById("fnctnString");
+	detailHeading.innerHTML = '';
+	detailInjectables.innerHTML = '';
+	detailFnctnString.innerHTML = '';
 	var VoObj = [];
 	var VoObjs = moduleMap[moduleName].moduleVo;
 	for(var i=0;i<VoObjs.length;i++)
@@ -350,13 +407,14 @@ function displayVoDetails(moduleName,moduleVo)
 			VoObj  = VoObjs[i];
 			}
 	}
-detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleVo+"</h3>";
-detailEle.innerHTML = detailEle.innerHTML + "<h3 style='text-align:center;'>KEY    :   Value</h3>";
+	// detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleVo+"</h3>";
+	detailHeading.textContent = moduleVo;
+	detailHeading.innerHTML = detailHeading.innerHTML + "<h3 style='text-align:center;'>KEY    :   Value</h3>";
 for(var key in VoObj[2][1])
 	{
 	if(VoObj[2][1].hasOwnProperty(key))
 		{
-			detailEle.innerHTML = detailEle.innerHTML + "<div style='text-align:center;'>"+key   +":"+   VoObj[2][1][key]+"</div>";
+		detailHeading.innerHTML = detailHeading.innerHTML + "<div style='text-align:center;'>"+key   +":"+   JSON.stringify(VoObj[2][1][key])+"</div>";
 		}
 	}
 
@@ -365,7 +423,13 @@ location.hash = '#popUpDetails';
 
 function displayCnstDetails(moduleName,moduleCnst)
 {
-	var detailEle = document.getElementById("popUpContent");
+	var detailHeading = document.getElementById("popUpHeading");
+	var detailInjectables = document.getElementById("injectables");
+	var detailFnctnString = document.getElementById("fnctnString");
+	detailHeading.innerHTML = '';
+	detailInjectables.innerHTML = '';
+	detailFnctnString.innerHTML = '';
+	// var detailEle = document.getElementById("popUpContent");
 	var CnstObj = [];
 	var CnstObjs = moduleMap[moduleName].moduleCnst;
 	for(var i=0;i<CnstObjs.length;i++)
@@ -375,13 +439,66 @@ function displayCnstDetails(moduleName,moduleCnst)
 			CnstObj  = CnstObjs[i];
 			}
 	}
-detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleCnst+"</h3>";
-detailEle.innerHTML = detailEle.innerHTML + "<h3 style='text-align:center;'>Constant Values</h3>";
+// detailEle.innerHTML = "<h3 style='text-align:center;'>"+moduleCnst+"</h3>";
+	detailHeading.textContent = moduleCnst;
+	detailHeading.innerHTML = detailHeading.innerHTML + "<h3 style='text-align:center;'>Constant Values</h3>";
 for(var j=0;j<CnstObj[2][1].length;j++)
 	{
-		detailEle.innerHTML = detailEle.innerHTML + "<div style='text-align:center;'>"+CnstObj[2][1][j]+"</div>"
+	detailHeading.innerHTML = detailHeading.innerHTML + "<div style='text-align:center;'>"+JSON.stringify(CnstObj[2][1][j])+"</div>";
 	}
 
 
 location.hash = '#popUpDetails';
 }
+
+function loadExcelData(moduleName)
+{
+	var ExcelData = [];
+	var moduleDependencies = [];
+	var moduleCtrl = [];
+	var moduleDrctv = [];
+	var moduleSrvc = [];
+	var moduleCnst = [];
+	var moduleVo = [];
+	this.moduleName = moduleName;
+	var v_module = angular.module(moduleName);
+
+	do{
+	
+		for (var i = 0; i < v_module.requires.length; i++) {
+			var moduleObj = new Object();
+			moduleObj = angular.module(v_module.requires[i]);
+			moduleDependencies.push(moduleObj);
+		}
+	
+
+	var providerArray = v_module._invokeQueue;
+	for (var i = 0; i < providerArray.length; i++) {
+		if (providerArray[i][1] == 'register')
+			moduleCtrl.push(providerArray[i]);
+		else if (providerArray[i][1] == 'directive')
+			moduleDrctv.push(providerArray[i]);
+		else if (providerArray[i][1] == 'service')
+			moduleSrvc.push(providerArray[i]);
+		else if (providerArray[i][1] == 'value')
+			moduleVo.push(providerArray[i]);
+		else if(providerArray[i][1] == 'constant')
+			moduleCnst.push(providerArray[i]);
+		}
+	
+	
+	}while(moduleDependencies.length>0)
+	
+	moduleMap[moduleName] = {
+			'moduleCtrl':moduleCtrl,
+			'moduleDrctv': moduleDrctv,
+			'moduleSrvc':moduleSrvc,
+			'moduleCnst':moduleCnst,
+			'moduleVo':moduleVo,
+			
+	};
+	
+
+	writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,moduleVo,moduleCnst,
+			divEle,moduleName);
+	}
