@@ -6,7 +6,7 @@ body
 
 button
 {
-	width: 50px;
+	width: auto;
 	color: white;
 	background: #234568;
 	border-style: groove;

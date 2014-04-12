@@ -23,7 +23,7 @@ function getIndexPage() {
 		divison = document.getElementById('check');
 		divison.setAttribute("style", "display:none");
 		divison.innerHTML = indexData;
-		loadScriptTags('report');
+		loadScriptTags('report');		
 	} catch (e) {
 		alert("Error has occured - " + e.name+" - "+e.message);
 	}
@@ -78,6 +78,7 @@ function getDependencies(moduleName, divEle) {
 	}
 	
 	moduleMap[moduleName] = {
+			'moduleDependencies':moduleDependencies,
 			'moduleCtrl':moduleCtrl,
 			'moduleDrctv': moduleDrctv,
 			'moduleSrvc':moduleSrvc,
@@ -246,7 +247,8 @@ function writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,mo
 	document.getElementById(divName).innerHTML = '';
 	document.getElementById(divName).setAttribute('class', 'reports');
 	document.getElementById(divName).innerHTML = '<h3>Module Name : '
-			+ moduleName + '</h3>';
+			+ moduleName + '</h3>'+'<button>Download Excel</button>';
+	document.getElementById(divName).getElementsByTagName("button")[0].setAttribute('onclick', 'downloadExcel("'+moduleName+'")');
 	document.getElementById(divName).appendChild(moduleTable);
 	document.getElementById(divName).appendChild(ctrlTable);
 	document.getElementById(divName).appendChild(drctvTable);
@@ -451,7 +453,7 @@ for(var j=0;j<CnstObj[2][1].length;j++)
 location.hash = '#popUpDetails';
 }
 
-function loadExcelData(moduleName)
+/*function loadExcelData()
 {
 	var ExcelData = [];
 	var moduleDependencies = [];
@@ -460,7 +462,8 @@ function loadExcelData(moduleName)
 	var moduleSrvc = [];
 	var moduleCnst = [];
 	var moduleVo = [];
-	this.moduleName = moduleName;
+	
+	
 	var v_module = angular.module(moduleName);
 
 	do{
@@ -498,7 +501,7 @@ function loadExcelData(moduleName)
 			
 	};
 	
-
+	downloadExcel();
 	writeResults(moduleDependencies, moduleCtrl, moduleDrctv, moduleSrvc,moduleVo,moduleCnst,
 			divEle,moduleName);
-	}
+	}*/
