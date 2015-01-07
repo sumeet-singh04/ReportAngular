@@ -1,0 +1,93 @@
+package main.java.com.webservice.filemgmt;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import main.java.com.auditlogmgnt.AuditLogPersistanceManager;
+import main.java.com.common.ErrorCodesEnum;
+import main.java.com.common.vo.ServiceResponseVO;
+import main.java.com.domain.DocumentVO;
+import main.java.com.framework.exception.ExceptionHandler;
+import main.java.com.framework.logger.ErrorLog;
+import main.java.com.framework.utils.ApplicationContextProvider;
+import main.java.com.webservice.GenericWebService;
+
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import com.google.gson.Gson;
+
+public class FileUploadServlet extends HttpServlet implements GenericWebService {
+	private static final long serialVersionUID = -8244073279641189889L;
+	private static ErrorLog logger;
+	static {
+		logger = ErrorLog.getLogger(FileUploadServlet.class);
+	}
+
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse res)
+			throws ServletException, IOException {
+		String documentName = "";
+		ServiceResponseVO<DocumentVO> files = null;
+		BigDecimal incId = new BigDecimal(req.getPathInfo().substring(1));
+		AuditLogPersistanceManager auditLogPersistanceManager = ApplicationContextProvider
+				.getApplicationContext().getBean(
+						AuditLogPersistanceManager.class);
+
+		FileManagementService fileManagerService = ApplicationContextProvider
+				.getApplicationContext().getBean(FileManagementService.class);
+		if (req.getHeader("Content-Type") != null
+				&& req.getHeader("Content-Type").startsWith(
+						"multipart/form-data")) {
+			logger.debug("File upload using multipart/form-data");
+
+			ServletFileUpload servletFileUpload = new ServletFileUpload();
+
+			FileItemIterator fileItemIterator = null;
+			InputStream bufferedInputStream = null;
+			try {
+				// initialize Audit log
+				auditLogPersistanceManager.initAuditLogTransationEntity();
+
+				fileItemIterator = servletFileUpload.getItemIterator(req);
+				FileItemStream fileItemStream = fileItemIterator.next();
+				bufferedInputStream = new BufferedInputStream(
+						fileItemStream.openStream());
+
+				if (fileItemStream.getName() != null) {
+
+					documentName = fileItemStream.getName();
+					if (documentName.lastIndexOf("\\") != -1) {
+						documentName = documentName.substring(
+								documentName.lastIndexOf("\\") + 1,
+								documentName.length());
+					}
+				}
+				files = fileManagerService.uploadDcoument(bufferedInputStream,
+						documentName, incId);
+				
+				// tear down Audit log
+				auditLogPersistanceManager.tearDownAuditInfo();
+			} catch (Exception e) {
+				ExceptionHandler.mailException(req, e);
+				logger.error("Error occured getting uploaded documents", e);
+				files = new ServiceResponseVO<DocumentVO>(
+						ErrorCodesEnum.UPLOAD_DOCUMENTS_ERROR);
+			} finally {
+				res.getWriter().write(new Gson().toJson(files));
+				res.setHeader("Content-Type", "text/plain");
+			}
+
+		}
+	}
+
+}
